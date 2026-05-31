@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bitcoin Universe — Technical Whitepaper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Exo+2:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --btc:#f7931a;--btc-amber:#ffab40;--btc-glow:rgba(247,147,26,0.4);
+  --bg:#020209;--bg-deep:#04040f;--bg-panel:rgba(8,8,22,0.92);
+  --bg-card:rgba(14,14,34,0.94);--border:rgba(38,38,72,0.9);
+  --border-lit:rgba(58,58,98,1);--text:#eaeaff;--muted:#7272a0;--dim:#40406a;
+  --cyan:#00e5ff;--purple:#9c4dff;--green:#69f0ae;--gold:#ffd700;
+  --r-common:#bdbdbd;--r-uncommon:#69f0ae;--r-rare:#40c4ff;
+  --r-epic:#e040fb;--r-legendary:#ffab40;--r-mythic:#ff1744;--r-transcendent:#fff;
+  --sidebar:260px;--content:760px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;font-size:0.94rem;line-height:1.75;min-height:100vh;overflow-x:hidden}
+
+/* ── STARFIELD CANVAS ── */
+#starfield{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── LAYOUT ── */
+.page-wrap{position:relative;z-index:1;display:flex;min-height:100vh}
+.toc-nav{
+  position:sticky;top:0;height:100vh;width:var(--sidebar);flex-shrink:0;
+  padding:32px 0 32px 28px;overflow-y:auto;
+  border-right:1px solid rgba(247,147,26,0.12);
+  background:linear-gradient(180deg,rgba(4,4,15,0.97) 0%,rgba(2,2,9,0.97) 100%);
+  backdrop-filter:blur(12px);
+}
+.toc-nav::-webkit-scrollbar{width:3px}
+.toc-nav::-webkit-scrollbar-thumb{background:rgba(247,147,26,0.3);border-radius:2px}
+.toc-brand{margin-bottom:28px}
+.toc-brand-title{
+  font-family:'Orbitron',sans-serif;font-size:0.72rem;font-weight:900;
+  letter-spacing:2.5px;text-transform:uppercase;
+  background:linear-gradient(135deg,#fff 0%,var(--btc-amber) 50%,var(--btc) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 10px rgba(247,147,26,0.4));line-height:1.3;
+}
+.toc-brand-sub{font-family:'Space Mono',monospace;font-size:0.48rem;color:var(--dim);letter-spacing:2px;margin-top:4px}
+.toc-back{
+  display:inline-flex;align-items:center;gap:6px;margin-top:12px;
+  font-family:'Space Mono',monospace;font-size:0.52rem;letter-spacing:1.5px;
+  color:var(--muted);text-decoration:none;text-transform:uppercase;
+  padding:5px 10px;border:1px solid var(--border);border-radius:6px;
+  transition:all 0.2s;
+}
+.toc-back:hover{color:var(--btc);border-color:rgba(247,147,26,0.4);background:rgba(247,147,26,0.06)}
+.toc-section-label{font-family:'Space Mono',monospace;font-size:0.44rem;letter-spacing:3px;text-transform:uppercase;color:var(--dim);margin:22px 0 8px}
+.toc-link{
+  display:block;font-family:'Space Mono',monospace;font-size:0.56rem;
+  letter-spacing:0.5px;color:var(--muted);text-decoration:none;
+  padding:5px 0 5px 10px;border-left:2px solid transparent;
+  transition:all 0.18s;line-height:1.4;margin-bottom:2px;
+}
+.toc-link:hover,.toc-link.active{color:var(--btc);border-left-color:var(--btc);background:rgba(247,147,26,0.05)}
+.toc-link.sub{padding-left:22px;font-size:0.52rem;opacity:0.8}
+.toc-version{
+  margin-top:auto;padding-top:20px;font-family:'Space Mono',monospace;
+  font-size:0.46rem;color:var(--dim);letter-spacing:1px;border-top:1px solid var(--border);margin-right:28px;
+}
+
+/* ── MAIN CONTENT ── */
+.content{flex:1;max-width:var(--content);margin:0 auto;padding:64px 48px 120px}
+
+/* ── HERO ── */
+.hero{
+  text-align:center;padding:80px 40px 60px;margin-bottom:64px;position:relative;
+  border-bottom:1px solid rgba(247,147,26,0.15);
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 20%,rgba(247,147,26,0.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Space Mono',monospace;font-size:0.52rem;letter-spacing:3px;text-transform:uppercase;
+  padding:6px 18px;border-radius:20px;margin-bottom:24px;
+  background:rgba(247,147,26,0.08);border:1px solid rgba(247,147,26,0.3);
+  color:var(--btc);text-shadow:0 0 10px rgba(247,147,26,0.5);
+  animation:heroBadgePulse 3s ease-in-out infinite;
+}
+@keyframes heroBadgePulse{0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 20px rgba(247,147,26,0.2)}}
+.hero-badge .dot{width:5px;height:5px;background:var(--btc);border-radius:50%;animation:pulseDot 1.8s ease-in-out infinite}
+@keyframes pulseDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(0.6)}}
+.hero-title{
+  font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,4vw,3.2rem);font-weight:900;
+  letter-spacing:4px;line-height:1.1;margin-bottom:16px;
+  background:linear-gradient(160deg,#ffffff 0%,#ffe4b0 30%,var(--btc) 60%,#c4620a 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 40px rgba(247,147,26,0.4));
+}
+.hero-sub{
+  font-family:'Orbitron',sans-serif;font-size:clamp(0.6rem,1.2vw,0.8rem);
+  letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:32px;
+}
+.hero-meta{
+  display:flex;justify-content:center;flex-wrap:wrap;gap:24px;
+  font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:1px;color:var(--dim);
+}
+.hero-meta span{display:flex;align-items:center;gap:6px}
+.hero-meta span::before{content:'';width:1px;height:12px;background:var(--border);display:none}
+.hero-meta span:not(:first-child)::before{display:block}
+
+/* ── SECTIONS ── */
+.section{margin-bottom:72px;scroll-margin-top:32px}
+.section-label{
+  font-family:'Space Mono',monospace;font-size:0.5rem;letter-spacing:4px;
+  text-transform:uppercase;color:var(--btc);margin-bottom:8px;opacity:0.7;
+}
+h2{
+  font-family:'Orbitron',sans-serif;font-size:clamp(1.1rem,2vw,1.6rem);font-weight:900;
+  letter-spacing:2px;margin-bottom:20px;line-height:1.2;
+  background:linear-gradient(135deg,#fff 0%,var(--btc-amber) 60%,var(--btc) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  padding-bottom:14px;border-bottom:1px solid rgba(247,147,26,0.2);position:relative;
+}
+h2::after{
+  content:'';position:absolute;bottom:-1px;left:0;width:60px;height:2px;
+  background:var(--btc);box-shadow:0 0 8px var(--btc-glow);border-radius:1px;
+}
+h3{
+  font-family:'Orbitron',sans-serif;font-size:0.82rem;font-weight:700;
+  letter-spacing:1.5px;color:var(--btc-amber);margin:28px 0 12px;text-transform:uppercase;
+}
+h4{
+  font-family:'Space Mono',monospace;font-size:0.7rem;font-weight:700;
+  letter-spacing:1px;color:var(--cyan);margin:20px 0 8px;
+}
+p{margin-bottom:14px;color:var(--text)}
+p:last-child{margin-bottom:0}
+
+/* ── ABSTRACT ── */
+.abstract-card{
+  background:var(--bg-card);border:1px solid rgba(247,147,26,0.25);
+  border-radius:14px;padding:28px 32px;margin-bottom:32px;position:relative;overflow:hidden;
+  box-shadow:0 0 40px rgba(247,147,26,0.06),inset 0 0 30px rgba(247,147,26,0.03);
+}
+.abstract-card::before{
+  content:'ABSTRACT';position:absolute;top:16px;right:20px;
+  font-family:'Orbitron',sans-serif;font-size:0.4rem;letter-spacing:4px;
+  color:rgba(247,147,26,0.15);font-weight:900;
+}
+
+/* ── PRINCIPLES TABLE ── */
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:0.82rem}
+thead tr{border-bottom:2px solid rgba(247,147,26,0.3)}
+th{
+  font-family:'Space Mono',monospace;font-size:0.56rem;letter-spacing:2px;
+  text-transform:uppercase;color:var(--btc);padding:10px 14px;text-align:left;
+  background:rgba(247,147,26,0.05);
+}
+td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text);line-height:1.5}
+tr:hover td{background:rgba(255,255,255,0.02)}
+code,kbd{
+  font-family:'Space Mono',monospace;font-size:0.72rem;
+  background:rgba(0,0,0,0.5);border:1px solid rgba(79,195,247,0.2);
+  color:var(--cyan);padding:2px 7px;border-radius:5px;
+}
+kbd{color:var(--btc);border-color:rgba(247,147,26,0.3);background:rgba(247,147,26,0.08)}
+
+/* ── CODE BLOCKS ── */
+pre{
+  background:rgba(0,0,0,0.6);border:1px solid rgba(79,195,247,0.15);
+  border-radius:12px;padding:20px 24px;overflow-x:auto;margin:16px 0;
+  border-left:3px solid var(--cyan);position:relative;
+}
+pre code{
+  background:none;border:none;padding:0;color:#a8d8ff;font-size:0.72rem;
+  line-height:1.8;display:block;
+}
+.code-label{
+  font-family:'Space Mono',monospace;font-size:0.44rem;letter-spacing:3px;
+  text-transform:uppercase;color:var(--dim);margin-bottom:6px;
+}
+
+/* ── CALLOUT BOXES ── */
+.callout{
+  border-radius:12px;padding:20px 22px;margin:20px 0;
+  font-size:0.84rem;line-height:1.65;position:relative;overflow:hidden;
+}
+.callout-note{background:rgba(0,229,255,0.05);border:1px solid rgba(0,229,255,0.2);border-left:3px solid var(--cyan)}
+.callout-warn{background:rgba(255,171,64,0.06);border:1px solid rgba(255,171,64,0.25);border-left:3px solid var(--btc-amber)}
+.callout-rare{background:rgba(224,64,251,0.05);border:1px solid rgba(224,64,251,0.2);border-left:3px solid var(--r-epic)}
+.callout-genesis{
+  background:rgba(255,215,0,0.05);border:2px solid rgba(255,215,0,0.35);
+  border-radius:14px;box-shadow:0 0 30px rgba(255,215,0,0.08);
+  animation:genesisPulse 3s ease-in-out infinite;
+}
+@keyframes genesisPulse{0%,100%{box-shadow:0 0 20px rgba(255,215,0,0.06)}50%{box-shadow:0 0 40px rgba(255,215,0,0.14)}}
+.callout-genesis .callout-title{color:var(--gold);text-shadow:0 0 10px rgba(255,215,0,0.6)}
+.callout-title{
+  font-family:'Orbitron',sans-serif;font-size:0.65rem;font-weight:900;
+  letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;
+}
+.callout p{color:var(--text);margin:6px 0 0}
+
+/* ── RARITY PILLS ── */
+.pill{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'Space Mono',monospace;font-size:0.6rem;font-weight:700;
+  letter-spacing:1px;padding:3px 10px;border-radius:12px;
+  border:1px solid;white-space:nowrap;
+}
+.pill-common   {color:var(--r-common);    border-color:rgba(189,189,189,0.3);background:rgba(189,189,189,0.06)}
+.pill-uncommon {color:var(--r-uncommon);  border-color:rgba(105,240,174,0.3);background:rgba(105,240,174,0.06)}
+.pill-rare     {color:var(--r-rare);      border-color:rgba(64,196,255,0.3); background:rgba(64,196,255,0.06)}
+.pill-epic     {color:var(--r-epic);      border-color:rgba(224,64,251,0.3); background:rgba(224,64,251,0.06)}
+.pill-legendary{color:var(--r-legendary); border-color:rgba(255,171,64,0.3); background:rgba(255,171,64,0.06)}
+.pill-mythic   {color:var(--r-mythic);    border-color:rgba(255,23,68,0.3);  background:rgba(255,23,68,0.06);  animation:mythicFlicker 2s ease-in-out infinite}
+.pill-transcendent{color:var(--r-transcendent);border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.06);animation:prismCycle 3.5s linear infinite}
+@keyframes mythicFlicker{0%,100%{text-shadow:0 0 6px rgba(255,23,68,0.6)}50%{text-shadow:0 0 14px rgba(255,80,0,0.9)}}
+@keyframes prismCycle{0%{border-color:rgba(255,100,130,0.5)}25%{border-color:rgba(64,196,255,0.5)}50%{border-color:rgba(105,240,174,0.5)}75%{border-color:rgba(224,64,251,0.5)}100%{border-color:rgba(255,100,130,0.5)}}
+
+/* ── STELLAR CLASS CARDS ── */
+.stellar-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin:20px 0}
+.stellar-card{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:12px;
+  padding:16px;position:relative;overflow:hidden;transition:transform 0.2s,border-color 0.2s;
+}
+.stellar-card:hover{transform:translateY(-2px)}
+.stellar-spectral{
+  font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:900;
+  line-height:1;margin-bottom:8px;
+}
+.stellar-name{font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.stellar-stat{font-family:'Space Mono',monospace;font-size:0.55rem;color:var(--muted);line-height:1.8}
+.stellar-zeros{
+  position:absolute;bottom:10px;right:12px;
+  font-family:'Orbitron',sans-serif;font-size:0.42rem;letter-spacing:1px;opacity:0.4;
+}
+.sc-common      {border-color:rgba(189,189,189,0.2);}.sc-common .stellar-spectral{color:var(--r-common)}
+.sc-uncommon    {border-color:rgba(105,240,174,0.25);}.sc-uncommon .stellar-spectral{color:var(--r-uncommon)}
+.sc-rare        {border-color:rgba(64,196,255,0.3);}.sc-rare .stellar-spectral{color:var(--r-rare)}
+.sc-epic        {border-color:rgba(224,64,251,0.3);}.sc-epic .stellar-spectral{color:var(--r-epic)}
+.sc-legendary   {border-color:rgba(255,171,64,0.35);box-shadow:0 0 20px rgba(255,171,64,0.08)}.sc-legendary .stellar-spectral{color:var(--r-legendary)}
+.sc-mythic      {border-color:rgba(255,23,68,0.5);box-shadow:0 0 24px rgba(255,23,68,0.12);animation:mythicCardPulse 2s ease-in-out infinite}.sc-mythic .stellar-spectral{color:var(--r-mythic);animation:mythicFlicker 2s ease-in-out infinite}
+.sc-transcendent{border-color:rgba(255,255,255,0.3);box-shadow:0 0 28px rgba(255,255,255,0.08);animation:prismCardCycle 3.5s linear infinite}.sc-transcendent .stellar-spectral{color:#fff;animation:prismCycle 3.5s linear infinite}
+@keyframes mythicCardPulse{0%,100%{box-shadow:0 0 18px rgba(255,23,68,0.1)}50%{box-shadow:0 0 36px rgba(255,23,68,0.22)}}
+@keyframes prismCardCycle{0%{border-color:rgba(255,100,130,0.4)}33%{border-color:rgba(64,196,255,0.4)}66%{border-color:rgba(105,240,174,0.4)}100%{border-color:rgba(255,100,130,0.4)}}
+
+/* ── ECONOMY TIERS ── */
+.eco-grid{display:grid;gap:10px;margin:20px 0}
+.eco-card{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:12px;
+  padding:16px 20px;display:flex;align-items:flex-start;gap:16px;
+  transition:transform 0.2s;
+}
+.eco-card:hover{transform:translateX(3px)}
+.eco-icon{font-size:1.6rem;flex-shrink:0;line-height:1}
+.eco-body{flex:1}
+.eco-tier-name{font-family:'Orbitron',sans-serif;font-size:0.72rem;font-weight:900;letter-spacing:1.5px;margin-bottom:4px}
+.eco-range{font-family:'Space Mono',monospace;font-size:0.55rem;color:var(--muted);letter-spacing:0.5px;margin-bottom:6px}
+.eco-upgrades{font-size:0.78rem;color:var(--text);margin-top:6px;line-height:1.6}
+.eco-upgrades li{margin-left:18px;margin-bottom:2px}
+.eco-common    {border-color:rgba(189,189,189,0.15)}.eco-common .eco-tier-name{color:var(--r-common)}
+.eco-uncommon  {border-color:rgba(105,240,174,0.2)}.eco-uncommon .eco-tier-name{color:var(--r-uncommon)}
+.eco-rare      {border-color:rgba(64,196,255,0.25)}.eco-rare .eco-tier-name{color:var(--r-rare)}
+.eco-legendary {border-color:rgba(255,171,64,0.3)}.eco-legendary .eco-tier-name{color:var(--r-legendary)}
+.eco-post      {border-color:rgba(0,229,255,0.35);box-shadow:0 0 16px rgba(0,229,255,0.06)}.eco-post .eco-tier-name{color:var(--cyan)}
+.eco-singularity{border-color:rgba(255,23,68,0.4);box-shadow:0 0 20px rgba(255,23,68,0.08);animation:singPulse 2s ease-in-out infinite}.eco-singularity .eco-tier-name{color:var(--r-mythic)}
+.eco-omega     {
+  border:2px solid rgba(255,215,0,0.5);box-shadow:0 0 30px rgba(255,215,0,0.1),0 0 60px rgba(255,180,0,0.05);
+  background:linear-gradient(135deg,rgba(255,215,0,0.06) 0%,rgba(14,14,34,0.95) 100%);
+  animation:omegaPulse 2.5s ease-in-out infinite;
+}
+.eco-omega .eco-tier-name{color:var(--gold);text-shadow:0 0 12px rgba(255,215,0,0.6)}
+@keyframes singPulse{0%,100%{box-shadow:0 0 16px rgba(255,23,68,0.07)}50%{box-shadow:0 0 32px rgba(255,23,68,0.18)}}
+@keyframes omegaPulse{0%,100%{box-shadow:0 0 22px rgba(255,215,0,0.08),0 0 44px rgba(255,180,0,0.04)}50%{box-shadow:0 0 42px rgba(255,215,0,0.18),0 0 80px rgba(255,180,0,0.1)}}
+
+/* ── RESOURCE ── */
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin:20px 0}
+.resource-card{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;text-align:center;transition:transform 0.2s;
+}
+.resource-card:hover{transform:translateY(-2px)}
+.resource-name{font-family:'Orbitron',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:1.5px;margin-bottom:6px}
+.resource-prob{font-family:'Space Mono',monospace;font-size:0.55rem;color:var(--muted)}
+.resource-bar{height:3px;border-radius:2px;margin:8px 0;background:var(--border)}
+.resource-fill{height:100%;border-radius:2px}
+.rc-stone  {border-color:rgba(139,125,107,0.3)}.rc-stone .resource-name{color:#8B7D6B}.rc-stone .resource-fill{background:#8B7D6B;width:57%}
+.rc-iron   {border-color:rgba(112,128,144,0.3)}.rc-iron .resource-name{color:#708090}.rc-iron .resource-fill{background:#708090;width:38%}
+.rc-gold   {border-color:rgba(255,215,0,0.3)}.rc-gold .resource-name{color:var(--gold)}.rc-gold .resource-fill{background:var(--gold);width:3%}
+.rc-crystal{border-color:rgba(0,229,255,0.35);box-shadow:0 0 12px rgba(0,229,255,0.08)}.rc-crystal .resource-name{color:var(--cyan)}.rc-crystal .resource-fill{background:var(--cyan);width:1.2%}
+.rc-void   {border-color:rgba(75,0,130,0.5);box-shadow:0 0 14px rgba(75,0,130,0.15);animation:voidPulse 2s ease-in-out infinite}.rc-void .resource-name{color:#c77dff}.rc-void .resource-fill{background:#c77dff;width:0.4%}
+@keyframes voidPulse{0%,100%{box-shadow:0 0 10px rgba(75,0,130,0.12)}50%{box-shadow:0 0 22px rgba(75,0,130,0.28)}}
+
+/* ── FLAGS TABLE ── */
+.flags-table td:first-child{font-family:'Space Mono',monospace;font-size:0.7rem;font-weight:700}
+.flag-genesis-row td{color:var(--gold) !important}
+.flag-genesis-row td:first-child{text-shadow:0 0 8px rgba(255,215,0,0.5)}
+.flag-genesis-row{animation:genesisRowPulse 2.8s ease-in-out infinite}
+@keyframes genesisRowPulse{0%,100%{background:rgba(255,215,0,0.04)}50%{background:rgba(255,215,0,0.08)}}
+
+/* ── GENESIS SIGNAL CALLOUT ── */
+.genesis-verify-steps{
+  counter-reset:steps;list-style:none;margin:14px 0;
+}
+.genesis-verify-steps li{
+  counter-increment:steps;position:relative;
+  padding:10px 14px 10px 46px;margin-bottom:8px;
+  background:rgba(255,215,0,0.04);border:1px solid rgba(255,215,0,0.15);
+  border-radius:8px;font-size:0.84rem;line-height:1.55;
+}
+.genesis-verify-steps li::before{
+  content:counter(steps);position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  font-family:'Orbitron',sans-serif;font-size:0.7rem;font-weight:900;
+  color:var(--gold);text-shadow:0 0 8px rgba(255,215,0,0.6);
+  width:22px;height:22px;display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(255,215,0,0.35);border-radius:50%;
+  background:rgba(255,215,0,0.08);
+}
+.genesis-pattern-display{
+  font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:700;
+  letter-spacing:10px;color:var(--gold);text-align:center;
+  padding:16px;border-radius:10px;
+  background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.25);
+  text-shadow:0 0 14px rgba(255,215,0,0.7),0 0 28px rgba(255,215,0,0.3);
+  margin:16px 0;animation:genesisTextFlare 2.8s ease-in-out infinite;
+}
+@keyframes genesisTextFlare{0%,100%{text-shadow:0 0 12px rgba(255,215,0,0.7),0 0 24px rgba(255,215,0,0.3)}50%{text-shadow:0 0 22px rgba(255,255,160,1),0 0 44px rgba(255,215,0,0.6),0 0 80px rgba(255,215,0,0.2)}}
+.genesis-blocks-list{
+  font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:1px;
+  color:var(--gold);opacity:0.75;line-height:2.2;word-break:break-all;
+  padding:14px 18px;background:rgba(255,215,0,0.04);border:1px solid rgba(255,215,0,0.15);
+  border-radius:8px;margin:12px 0;
+}
+
+/* ── ROADMAP ── */
+.roadmap{display:flex;flex-direction:column;gap:0;margin:20px 0;position:relative}
+.roadmap::before{content:'';position:absolute;left:18px;top:0;bottom:0;width:1px;background:linear-gradient(180deg,var(--btc),transparent)}
+.roadmap-item{display:flex;gap:20px;padding:14px 0 14px 0}
+.roadmap-dot{
+  width:37px;height:37px;flex-shrink:0;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',sans-serif;font-size:0.58rem;font-weight:900;letter-spacing:1px;
+  background:var(--bg-card);border:2px solid rgba(247,147,26,0.35);color:var(--btc);
+  position:relative;z-index:1;flex-shrink:0;
+}
+.roadmap-body{padding-top:8px}
+.roadmap-ver{font-family:'Orbitron',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:1px;color:var(--btc-amber);margin-bottom:4px}
+.roadmap-desc{font-size:0.82rem;color:var(--muted)}
+
+/* ── FOOTER ── */
+.footer{
+  text-align:center;padding:40px;border-top:1px solid var(--border);
+  font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:1.5px;
+  color:var(--dim);line-height:2;
+}
+.footer a{color:var(--btc);text-decoration:none}
+.footer a:hover{text-decoration:underline}
+
+/* ── PROJECT INFO CARD ── */
+.project-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 64px;
+  padding: 28px 32px;
+  background: var(--bg-card);
+  border: 1px solid rgba(247,147,26,0.3);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(247,147,26,0.06), inset 0 0 30px rgba(247,147,26,0.02);
+}
+.project-card::before {
+  content: 'PROJECT INFO';
+  position: absolute; top: 14px; right: 20px;
+  font-family: 'Orbitron', sans-serif; font-size: 0.38rem;
+  letter-spacing: 4px; color: rgba(247,147,26,0.15); font-weight: 900;
+}
+.project-card::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 10% 50%, rgba(247,147,26,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+.project-field { display: flex; flex-direction: column; gap: 5px; }
+.project-field.full { grid-column: 1 / -1; }
+.project-field-label {
+  font-family: 'Space Mono', monospace; font-size: 0.46rem;
+  letter-spacing: 3px; text-transform: uppercase; color: var(--dim);
+}
+.project-field-value {
+  font-family: 'Orbitron', sans-serif; font-size: 0.78rem;
+  font-weight: 700; color: var(--text); letter-spacing: 0.5px;
+}
+.project-field-value a { color: var(--btc); text-decoration: none; }
+.project-field-value a:hover { text-decoration: underline; }
+.project-field-sub {
+  font-family: 'Space Mono', monospace; font-size: 0.58rem;
+  color: var(--muted); margin-top: 2px; line-height: 1.5;
+}
+.project-divider { grid-column: 1 / -1; height: 1px; background: var(--border); margin: 4px 0; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(247,147,26,0.25);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(247,147,26,0.45)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .toc-nav{display:none}
+  .content{padding:32px 24px 80px}
+  .stellar-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:540px){
+  .stellar-grid{grid-template-columns:1fr}
+  .resource-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<canvas id="starfield"></canvas>
+
+<div class="page-wrap">
+<!-- ── TOC NAV ── -->
+<nav class="toc-nav">
+  <div class="toc-brand">
+    <div class="toc-brand-title">Bitcoin<br>Universe</div>
+    <div class="toc-brand-sub">// Whitepaper v0.3.0</div>
+    <a href="index.html" class="toc-back">← Back to Explorer</a>
+  </div>
+
+  <div class="toc-section-label">Contents</div>
+  <a href="#abstract"    class="toc-link">Abstract</a>
+  <a href="#intro"       class="toc-link">1. Introduction</a>
+  <a href="#arch"        class="toc-link">2. Architecture</a>
+  <a href="#arch"        class="toc-link sub">2.1 Data Layer</a>
+  <a href="#prng"        class="toc-link sub">2.2 PRNG Engine</a>
+  <a href="#traits"      class="toc-link">3. Trait Generation</a>
+  <a href="#biome"       class="toc-link sub">3.1 Surface Biome</a>
+  <a href="#weather"     class="toc-link sub">3.2 Atmosphere</a>
+  <a href="#civ"         class="toc-link sub">3.3 Civilization</a>
+  <a href="#economy"     class="toc-link sub">3.4 Economy</a>
+  <a href="#stellar"     class="toc-link sub">3.5 Stellar Class</a>
+  <a href="#resource"    class="toc-link sub">3.6 Resource Deposit</a>
+  <a href="#era"         class="toc-link sub">3.7 Historical Era</a>
+  <a href="#flags"       class="toc-link">4. Special Flags</a>
+  <a href="#genesis"     class="toc-link sub">4.0 Genesis Signal ✦</a>
+  <a href="#allflags"    class="toc-link sub">4.1 All Flags</a>
+  <a href="#rendering"   class="toc-link">5. 3D Rendering</a>
+  <a href="#ui"          class="toc-link">6. UI & Controls</a>
+  <a href="#namespace"   class="toc-link">7. Namespace</a>
+  <a href="#security"    class="toc-link">8. Security</a>
+  <a href="#perf"        class="toc-link">9. Performance</a>
+  <a href="#conclusion"  class="toc-link">10. Conclusion</a>
+
+  <div class="toc-version">
+    Protocol v0.3.0 · May 2026<br>
+    WebGL / Three.js · No indexer required
+  </div>
+</nav>
+
+<!-- ── MAIN CONTENT ── -->
+<main class="content">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge"><span class="dot"></span> Technical Whitepaper</div>
+    <h1 class="hero-title">🌌 Bitcoin Universe</h1>
+    <div class="hero-sub">Deterministic On-Chain Procedural Generation</div>
+    <div class="hero-meta">
+      <span>Version 0.3.0</span>
+      <span>May 2026</span>
+      <span>Protocol: Deterministic OPG</span>
+      <span>Renderer: WebGL / Three.js</span>
+    </div>
+  </div>
+
+  <!-- ABSTRACT -->
+  <section class="section" id="abstract">
+    <div class="section-label">§ Abstract</div>
+    <h2>Abstract</h2>
+    <div class="abstract-card">
+      <p>Bitcoin Universe is a deterministic, on-chain procedural generation engine that transforms raw Bitcoin consensus data into interactive 3D star systems. Every Bitcoin block — identified by its height — produces a unique, verifiable, and immutable cosmic visualization derived entirely from the block's intrinsic fields: <code>hash</code>, <code>merkle_root</code>, <code>transaction_count</code>, <code>total_fee</code>, <code>subsidy</code>, and <code>timestamp</code>.</p>
+      <p>By eliminating external randomness and anchoring all visual and trait outputs to consensus-verified block data, Bitcoin Universe creates a trustless digital-physical artifact class: <strong>on-chain worlds</strong> that anyone can reproduce independently given only a block height.</p>
+    </div>
+  </section>
+
+  <!-- PROJECT INFO CARD -->
+  <div class="project-card">
+    <div class="project-field full">
+      <div class="project-field-label">Project</div>
+      <div class="project-field-value">Bitcoin Universe</div>
+      <div class="project-field-sub">A universe built from Bitcoin data — every block is a star system</div>
+    </div>
+    <div class="project-divider"></div>
+    <div class="project-field">
+      <div class="project-field-label">Namespace</div>
+      <div class="project-field-value"><code style="font-size:0.82rem;">.bitcoin</code></div>
+      <div class="project-field-sub">Among the first to utilize the .bitcoin namespace on Ordinals parent-child hierarchy</div>
+    </div>
+    <div class="project-field">
+      <div class="project-field-label">Built by</div>
+      <div class="project-field-value">BitBlock Labs</div>
+      <div class="project-field-sub">The BitBlock Labs team</div>
+    </div>
+    <div class="project-field">
+      <div class="project-field-label">Contact</div>
+      <div class="project-field-value"><a href="https://x.com/bitblock_btc" target="_blank">@bitblock_btc</a></div>
+      <div class="project-field-sub">x.com/bitblock_btc</div>
+    </div>
+    <div class="project-field">
+      <div class="project-field-label">Protocol</div>
+      <div class="project-field-value">v0.3.0</div>
+      <div class="project-field-sub">Deterministic On-Chain Procedural Generation</div>
+    </div>
+  </div>
+
+  <!-- INTRODUCTION -->
+  <section class="section" id="intro">
+    <div class="section-label">§ 1</div>
+    <h2>1. Introduction</h2>
+    <h3>1.1 Motivation</h3>
+    <p>Bitcoin blocks are cryptographically sealed packets of entropy. Each block hash is an unpredictable, universally agreed-upon 64-byte hexadecimal string. Rather than treating this entropy as mere bookkeeping, Bitcoin Universe interprets it as the <strong>genome</strong> of a star system. The result is a cross-disciplinary bridge between blockchain consensus, procedural generation, and real-time 3D graphics.</p>
+    <h3>1.2 Design Principles</h3>
+    <table>
+      <thead><tr><th>Principle</th><th>Implementation</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Determinism</strong></td><td>Identical block height → identical output, every time, on any device.</td></tr>
+        <tr><td><strong>Verifiability</strong></td><td>All traits link to inspectable on-chain fields with explicit derivation formulas.</td></tr>
+        <tr><td><strong>Immutability</strong></td><td>Once a block is mined, its cosmic representation is fixed forever.</td></tr>
+        <tr><td><strong>Accessibility</strong></td><td>Zero installation; runs in any WebGL-capable browser.</td></tr>
+        <tr><td><strong>Composability</strong></td><td>Namespace system (<code>&lt;label&gt;.&lt;height&gt;.bitcoin</code>) allows child derivations.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ARCHITECTURE -->
+  <section class="section" id="arch">
+    <div class="section-label">§ 2</div>
+    <h2>2. System Architecture</h2>
+    <h3>2.1 Data Layer</h3>
+    <p>The canonical data source is the <strong>Ordinals block endpoint</strong>:</p>
+    <div class="code-label">Endpoint</div>
+    <pre><code>GET https://ordinals.com/r/blockinfo/{height}</code></pre>
+    <table>
+      <thead><tr><th>Field</th><th>Type</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td><code>height</code></td><td>uint32</td><td>System identifier &amp; namespace root.</td></tr>
+        <tr><td><code>hash</code></td><td>hex64</td><td>Primary entropy source for biome, weather, stellar class, flags.</td></tr>
+        <tr><td><code>merkle_root</code></td><td>hex64</td><td>Secondary entropy for resource extraction.</td></tr>
+        <tr><td><code>transaction_count</code></td><td>uint32</td><td>Civilization density metric.</td></tr>
+        <tr><td><code>total_fee</code></td><td>uint64</td><td>Economic development metric.</td></tr>
+        <tr><td><code>subsidy</code></td><td>uint64</td><td>Historical era classification.</td></tr>
+        <tr><td><code>timestamp</code></td><td>uint32</td><td>Temporal modifier &amp; time-based flags.</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Caching Strategy:</strong> Client-side <code>Map</code> with LRU eviction (capacity: 30 blocks). Eliminates redundant network requests.</p>
+
+    <h3 id="prng">2.2 Deterministic Randomness Engine</h3>
+    <p>Bitcoin Universe does <strong>not</strong> use <code>Math.random()</code>. It employs a seeded PRNG initialized from the block hash.</p>
+    <h4>Seed Derivation</h4>
+    <pre><code>seed = Σ(i=0..n-1)  hash.charCodeAt(i) × 31^(n-1-i)   (mod 2³²)</code></pre>
+    <h4>Mulberry32 PRNG</h4>
+    <pre><code>function mulberry32(a) {
+    return function() {
+        let t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ t >>> 15, t | 1);
+        t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+}</code></pre>
+  </section>
+
+  <!-- TRAITS -->
+  <section class="section" id="traits">
+    <div class="section-label">§ 3</div>
+    <h2>3. Trait Generation Protocol</h2>
+
+    <h3 id="biome">3.1 Surface Biome</h3>
+    <div class="callout callout-note">
+      <div class="callout-title">🔬 Fair Distribution</div>
+      <p>Because modern Bitcoin block hashes begin with many zeros due to proof-of-work difficulty, using the first byte would produce 99% Ocean biomes. Entropy is extracted from <strong>hash byte 9</strong> (characters 18–20), safely past the typical 18-character proof-of-work zero prefix.</p>
+    </div>
+    <pre><code>biome_index = parseInt(hash[18:20], 16) % 5</code></pre>
+    <table>
+      <thead><tr><th>Index</th><th>Biome</th><th>Emoji</th><th>Core Palette</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>Ocean</td><td>🌊</td><td>Cyan / Deep Blue / White</td></tr>
+        <tr><td>1</td><td>Desert</td><td>🏜️</td><td>Amber / Orange / White</td></tr>
+        <tr><td>2</td><td>Forest</td><td>🌳</td><td>Green / Emerald / White</td></tr>
+        <tr><td>3</td><td>Snowfield</td><td>❄️</td><td>Ice Blue / Pale Cyan / White</td></tr>
+        <tr><td>4</td><td>Volcano</td><td>🌋</td><td>Crimson / Magma / Gold</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="weather">3.2 Atmosphere (Weather)</h3>
+    <pre><code>weather_index = parseInt(hash[2:4], 16) % 4</code></pre>
+    <table>
+      <thead><tr><th>Index</th><th>Weather</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>Sunny</td></tr>
+        <tr><td>1</td><td>Rain</td></tr>
+        <tr><td>2</td><td>Storm</td></tr>
+        <tr><td>3</td><td>Snow</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="civ">3.3 Civilization Density</h3>
+    <table>
+      <thead><tr><th>Tx Count</th><th>Classification</th><th>Level</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Primordial / Empty</td><td>0</td></tr>
+        <tr><td>2 – 100</td><td>Ancient / Sparse</td><td>1</td></tr>
+        <tr><td>101 – 1,000</td><td>Settled / Medieval</td><td>2</td></tr>
+        <tr><td>1,001 – 5,000</td><td>Industrial / Dense</td><td>3</td></tr>
+        <tr><td>5,001 – 7,000</td><td>Metropolitan</td><td>4</td></tr>
+        <tr><td>7,001 – 8,000</td><td>Megacity</td><td>5</td></tr>
+        <tr><td>8,001+</td><td><strong>Ecumenopolis</strong></td><td>6</td></tr>
+      </tbody>
+    </table>
+    <div class="callout callout-rare">
+      <div class="callout-title">🌆 Ecumenopolis (Level 6)</div>
+      <p>Extremely rare — receives distinctive visual upgrades: a thick, bright red pulsing ring, 60 city-light particles, 30 urban glow sprites, central core glow, +25% opacity, and 24 rotating satellite dots.</p>
+    </div>
+
+    <h3 id="economy">3.4 Economic Development</h3>
+    <p>Derived from <code>total_fee</code> (satoshis). The three rarest tiers trigger a separate rendering pipeline layered on top of the base stellar class.</p>
+    <div class="eco-grid">
+      <div class="eco-card eco-common"><div class="eco-icon">🪨</div><div class="eco-body"><div class="eco-tier-name">Tier 0 — Primordial</div><div class="eco-range">0 sats · Genesis block only</div></div></div>
+      <div class="eco-card eco-uncommon"><div class="eco-icon">🌾</div><div class="eco-body"><div class="eco-tier-name">Tier 1 — Agricultural</div><div class="eco-range">1–10,000 sats · Very early era blocks</div></div></div>
+      <div class="eco-card eco-rare"><div class="eco-icon">⚓</div><div class="eco-body"><div class="eco-tier-name">Tier 2 — Mercantile</div><div class="eco-range">10,001–1,000,000 sats · Low-activity periods</div></div></div>
+      <div class="eco-card eco-legendary"><div class="eco-icon">🏭</div><div class="eco-body"><div class="eco-tier-name">Tier 3 — Industrial Empire</div><div class="eco-range">1,000,001–50,000,000 sats · Typical modern block</div></div></div>
+      <div class="eco-card eco-post"><div class="eco-icon">💠</div><div class="eco-body"><div class="eco-tier-name">Tier 4 — Post-Scarcity</div><div class="eco-range">50,000,001–100,000,000 sats · High congestion</div><ul class="eco-upgrades"><li>Cyan central orb · 80-particle spiral</li><li>2 aura rings · +20% opacity · +20% field</li></ul></div></div>
+      <div class="eco-card eco-singularity"><div class="eco-icon">🌀</div><div class="eco-body"><div class="eco-tier-name">Tier 5 — Singularity</div><div class="eco-range">100,000,001–499,999,999 sats · Extreme outliers</div><ul class="eco-upgrades"><li>Crimson/gold dual orb · 120-particle spiral</li><li>3 aura rings · +30% opacity · +40% field</li></ul></div></div>
+      <div class="eco-card eco-omega"><div class="eco-icon">Ω</div><div class="eco-body"><div class="eco-tier-name">Tier 6 — Ω OMEGA</div><div class="eco-range">500,000,000+ sats · 5+ BTC in a single block</div><ul class="eco-upgrades"><li>Deep gold / white supernova orb</li><li>160-particle spiral in 3 concentric shells</li><li>5 aura rings · +40% opacity · +60% field</li><li>12 energy arcs — electromagnetic discharge halo</li></ul></div></div>
+    </div>
+    <div class="callout callout-note">
+      <div class="callout-title">⚛️ Stacking Note</div>
+      <p>Post-Scarcity, Singularity, and Omega tiers are detected at runtime from <code>total_fee</code> and layer on top of the base stellar class system. An Omega-economy Transcendent-class block accumulates all enhancements from both dimensions simultaneously.</p>
+    </div>
+
+    <h3 id="stellar">3.5 Stellar Class (Rarity)</h3>
+    <p>Derived from the count of leading zero characters in the block hash. Each additional zero is statistically <strong>16× rarer</strong>.</p>
+    <pre><code>leading_zeros = count of '0' chars before first non-zero char in hash
+stellar_class  = lookup(leading_zeros)</code></pre>
+    <div class="stellar-grid">
+      <div class="stellar-card sc-common"><div class="stellar-spectral">M</div><div class="stellar-name"><span class="pill pill-common">Common</span></div><div class="stellar-stat">Zeros: 0–8<br>Radius: 1.2 · Core: 12 · Field: 20</div><div class="stellar-zeros">0–8 zeros</div></div>
+      <div class="stellar-card sc-uncommon"><div class="stellar-spectral">G</div><div class="stellar-name"><span class="pill pill-uncommon">Uncommon</span></div><div class="stellar-stat">Zeros: 9<br>Radius: 1.6 · Core: 28 · Field: 38</div><div class="stellar-zeros">9 zeros</div></div>
+      <div class="stellar-card sc-rare"><div class="stellar-spectral">F</div><div class="stellar-name"><span class="pill pill-rare">Rare</span></div><div class="stellar-stat">Zeros: 10<br>Radius: 2.0 · Core: 48 · Field: 60</div><div class="stellar-zeros">10 zeros</div></div>
+      <div class="stellar-card sc-epic"><div class="stellar-spectral">A</div><div class="stellar-name"><span class="pill pill-epic">Epic</span></div><div class="stellar-stat">Zeros: 11<br>Radius: 2.5 · Core: 72 · Field: 88</div><div class="stellar-zeros">11 zeros</div></div>
+      <div class="stellar-card sc-legendary"><div class="stellar-spectral">B</div><div class="stellar-name"><span class="pill pill-legendary">Legendary</span></div><div class="stellar-stat">Zeros: 12–20 · 2 cages · 2 rings<br>Radius: 3.2 · Core: 105 · Field: 128</div><div class="stellar-zeros">12–20 zeros</div></div>
+      <div class="stellar-card sc-mythic"><div class="stellar-spectral">O</div><div class="stellar-name"><span class="pill pill-mythic">Mythic</span></div><div class="stellar-stat">Zeros: 21–22 · 4 cages · 4 rings<br>Radius: 4.0 · Core: 200 · Field: 240</div><div class="stellar-zeros">21–22 zeros</div></div>
+      <div class="stellar-card sc-transcendent"><div class="stellar-spectral">Ω</div><div class="stellar-name"><span class="pill pill-transcendent">Transcendent</span></div><div class="stellar-stat">Zeros: 23+ · 5 cages · 6 rings<br>Radius: 5.0 · Core: 280 · Field: 320</div><div class="stellar-zeros">23+ zeros</div></div>
+    </div>
+    <div class="callout callout-warn">
+      <div class="callout-title">🔭 Statistical Note</div>
+      <p>Mythic and Transcendent classes are statistically extraordinary. Bitcoin's current proof-of-work yields hashes with 18–19 leading zeros as the baseline. Achieving 21–23+ zeros requires satisfying both standard difficulty and an additional cosmic lottery. No confirmed block has reached Transcendent class in Bitcoin's entire history.</p>
+    </div>
+
+    <h3 id="resource">3.6 Resource Deposit</h3>
+    <p>Derived from <code>merkle_root[0:2]</code> — an independent entropy source from the block hash, ensuring the mineral deposit is uncorrelated with biome, weather, and stellar class.</p>
+    <pre><code>resource_byte = parseInt(merkle_root[0:2], 16)   // range 0–255</code></pre>
+    <div class="resource-grid">
+      <div class="resource-card rc-stone"><div class="resource-name">Stone</div><div class="resource-bar"><div class="resource-fill"></div></div><div class="resource-prob">0x00–0x91 · ~57.0%</div></div>
+      <div class="resource-card rc-iron"><div class="resource-name">Iron</div><div class="resource-bar"><div class="resource-fill"></div></div><div class="resource-prob">0x92–0xF3 · ~38.3%</div></div>
+      <div class="resource-card rc-gold"><div class="resource-name">Gold</div><div class="resource-bar"><div class="resource-fill"></div></div><div class="resource-prob">0xF4–0xFB · ~3.1%</div></div>
+      <div class="resource-card rc-crystal"><div class="resource-name">Crystal</div><div class="resource-bar"><div class="resource-fill"></div></div><div class="resource-prob">0xFC–0xFE · ~1.2%</div></div>
+      <div class="resource-card rc-void"><div class="resource-name">Void Matter</div><div class="resource-bar"><div class="resource-fill"></div></div><div class="resource-prob">0xFF · ~0.4% (1-in-256)</div></div>
+    </div>
+
+    <h3 id="era">3.7 Historical Era</h3>
+    <table>
+      <thead><tr><th>Subsidy (sats)</th><th>Era</th><th>Block Range</th></tr></thead>
+      <tbody>
+        <tr><td>5,000,000,000</td><td>Genesis Era</td><td>0–209,999</td></tr>
+        <tr><td>2,500,000,000</td><td>Pioneer Era</td><td>210,000–419,999</td></tr>
+        <tr><td>1,250,000,000</td><td>Growth Era</td><td>420,000–629,999</td></tr>
+        <tr><td>625,000,000</td><td>Maturity Era</td><td>630,000–839,999</td></tr>
+        <tr><td>312,500,000</td><td>Sovereign Era</td><td>840,000–1,049,999</td></tr>
+        <tr><td>156,250,000</td><td>Post-Sovereign Era</td><td>1,050,000+</td></tr>
+        <tr><td>0</td><td>Terminal Era</td><td>~6,930,000+</td></tr>
+      </tbody>
+    </table>
+
+    <h3>3.8 Temporal Modifiers</h3>
+    <table>
+      <thead><tr><th>Condition</th><th>Modifier</th></tr></thead>
+      <tbody>
+        <tr><td>Hour 0,1,23 + Weekend</td><td>Void Midnight</td></tr>
+        <tr><td>Hour 0,1,23</td><td>Midnight</td></tr>
+        <tr><td>Weekend</td><td>Weekend Pulse</td></tr>
+        <tr><td>Otherwise</td><td>Standard</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- SPECIAL FLAGS -->
+  <section class="section" id="flags">
+    <div class="section-label">§ 4</div>
+    <h2>4. Special Flags &amp; Cosmic Phenomena</h2>
+    <p>Special flags are boolean properties layered onto any block, independent of Stellar Class or Economy. Active flags trigger dedicated visual effects in both the 3D star map and the sidebar trait panel. Flags are not mutually exclusive.</p>
+
+    <!-- GENESIS SIGNAL -->
+    <div class="callout callout-genesis" id="genesis">
+      <div class="callout-title">🌅 4.0 — GENESIS SIGNAL</div>
+
+      <div class="genesis-pattern-display">2 0 0 9 0 1 0 3</div>
+
+      <table style="margin:16px 0">
+        <thead><tr><th>Attribute</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Display name</td><td><strong style="color:var(--gold)">Genesis Signal</strong></td></tr>
+          <tr><td>Icon</td><td>🌅</td></tr>
+          <tr><td>Pattern</td><td><code style="color:var(--gold);border-color:rgba(255,215,0,0.3);background:rgba(255,215,0,0.06)">20090103</code> — found inside transaction hashes on the block page</td></tr>
+          <tr><td>What it encodes</td><td>January 3, 2009 — the date Satoshi Nakamoto mined the Bitcoin Genesis Block (Block 0)</td></tr>
+          <tr><td>Supply</td><td>23 confirmed blocks of ~950,000 mined (&lt;0.003% — rarest flag in the system)</td></tr>
+          <tr><td>Known blocks</td><td><div class="genesis-blocks-list">350315, 351614, 450967, 496495, 507036, 507904, 559958, 595616, 641609, 719123, 732952, 771861, 826296, 826407, 827406, 828188, 851335, 878452, 883473, 897414, 920323, 936476, 941404</div></td></tr>
+        </tbody>
+      </table>
+
+      <h4 style="color:var(--gold);margin-top:20px">How to manually verify a block</h4>
+      <ol class="genesis-verify-steps">
+        <li>Navigate to <code>ordinals.com/block/{height}</code> in your browser — e.g. <a href="https://ordinals.com/block/851335" style="color:var(--gold)" target="_blank">ordinals.com/block/851335</a></li>
+        <li>Open your browser's find bar — <strong>Menu → Find and edit</strong>, or press <kbd>Ctrl+F</kbd> / <kbd>⌘F</kbd></li>
+        <li>Type <strong><code style="color:var(--gold);border-color:rgba(255,215,0,0.3)">20090103</code></strong> and press Enter</li>
+        <li>If the pattern exists in one of the block's transaction hashes, your browser will <strong>highlight and jump to it</strong> — shown as "1/1" or higher in the search bar</li>
+      </ol>
+
+      <h4 style="color:var(--gold);margin-top:20px">Visual effects when active</h4>
+      <p style="margin-bottom:10px"><strong>Sidebar:</strong> Full-width premium card with animated gold border pulse, the pattern in spaced monospace, encoded date, and rarity note.</p>
+      <p><strong>3D star map — seven stacked layers:</strong></p>
+      <table style="margin-top:10px">
+        <thead><tr><th>Layer</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Blazing core orb</td><td>White-gold at <code>2.5× coreRadius</code> — brightest center in the system</td></tr>
+          <tr><td>Gold bloom</td><td>Secondary warm glow at <code>4.5× coreRadius</code></td></tr>
+          <tr><td>3× sunrise rings</td><td>Concentric tilted tori at <code>1.55×</code>, <code>1.95×</code>, <code>2.42× coreRadius</code>, each spinning independently</td></tr>
+          <tr><td>Sacred icosahedron</td><td>Gold wireframe at <code>1.2× coreRadius</code>, dual-axis rotation</td></tr>
+          <tr><td>16 dawn beams</td><td>Radial light lines pulsing outward, individual frequencies</td></tr>
+          <tr><td>24 orbit particles</td><td>Golden dots revolving in warm orbital band, twinkle-animated</td></tr>
+          <tr><td>Outer halo</td><td>Diffuse gold at <code>8× coreRadius</code> — tints entire scene warm gold</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:12px;font-size:0.8rem;color:rgba(255,215,0,0.65)">All pre-existing nebula particles receive a +0.30 opacity boost. Field particles scale ×1.5 and shift to #ffd700.</p>
+
+      <!-- Genesis verification screenshot -->
+      <div style="margin-top:22px;">
+        <h4 style="color:var(--gold);margin-bottom:12px;">Verification — Pattern highlighted in browser</h4>
+        <div style="border:1px solid rgba(255,215,0,0.3);border-radius:10px;overflow:hidden;box-shadow:0 0 24px rgba(255,215,0,0.08);">
+          <img src="20090103.png" alt="Browser find tool highlighting 20090103 in transaction hashes on ordinals.com/block/350315" style="width:100%;display:block;" />
+          <div style="padding:8px 14px;background:rgba(255,215,0,0.06);font-family:'Space Mono',monospace;font-size:0.6rem;color:rgba(255,215,0,0.6);letter-spacing:1px;">
+            &#x25B2;&nbsp; ordinals.com/block/350315 — browser Ctrl+F highlighting <strong style="color:var(--gold);">20090103</strong> inside a transaction hash (1/1 match)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALL FLAGS TABLE -->
+    <h3 id="allflags">4.1 All Special Flags</h3>
+    <table class="flags-table">
+      <thead><tr><th>Flag</th><th>Trigger</th><th>Rarity</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr class="flag-genesis-row"><td>🌅 Genesis Signal</td><td>Height in confirmed Genesis Signal list</td><td>Ultra-rare · ~0.003%</td><td>Pattern 20090103 in tx hashes — Bitcoin's birthday</td></tr>
+        <tr><td>💥 Nova Event</td><td><code>height % 210,000 == 0</code></td><td>Every 210k blocks</td><td>Bitcoin halving</td></tr>
+        <tr><td>⚛️ Quantum Shift</td><td><code>height % 2,016 == 0</code></td><td>~Every 2 weeks</td><td>Difficulty adjustment epoch</td></tr>
+        <tr><td>📅 Weekend Pulse</td><td><code>day ∈ {0,6}</code></td><td>~28%</td><td>Mined on weekend</td></tr>
+        <tr><td>🌙 Void Midnight</td><td><code>hour ∈ {0,1,23}</code></td><td>~12.5%</td><td>Near UTC midnight</td></tr>
+        <tr><td>✨ Cosmic Signature</td><td><code>hash</code> contains <code>21e8</code></td><td>~0.05%</td><td>Sacred pattern</td></tr>
+        <tr><td>🔁 Cosmic Echo</td><td><code>hash</code> has 4+ repeated hex chars</td><td>~18%</td><td>Resonance anomaly</td></tr>
+        <tr><td>🪞 Symmetric Nebula</td><td>Block height palindrome ≥3 digits</td><td>Variable</td><td>Structural symmetry</td></tr>
+        <tr><td>🔢 Prime Alignment</td><td><code>isPrime(height)</code></td><td>~13%</td><td>Mathematical rarity</td></tr>
+        <tr><td>📐 Harmonic Sequence</td><td><code>isFibonacci(height)</code></td><td>Rare</td><td>Golden ratio alignment</td></tr>
+        <tr><td>🔥 Primordial Age</td><td><code>height &lt; 1000</code></td><td>0.1%</td><td>First 1,000 blocks</td></tr>
+        <tr><td>2️⃣ Binary Nexus</td><td>Power of two</td><td>Rare</td><td>Binary perfection</td></tr>
+        <tr><td>3️⃣ Ternary Resonance</td><td>Power of three</td><td>Rare</td><td>Ternary harmonic</td></tr>
+        <tr><td>! Exponential Crest</td><td>Factorial (<code>n!</code>)</td><td>Ultra-rare</td><td>Exponential milestone</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- RENDERING -->
+  <section class="section" id="rendering">
+    <div class="section-label">§ 5</div>
+    <h2>5. 3D Rendering Engine</h2>
+    <p><strong>Stack:</strong> Three.js r160, OrbitControls, WebGL 2.0.</p>
+    <p><strong>Scene layers:</strong> background stars, inner nebula (particle count scales with civilization &amp; rarity), bright heart, geodesic cages (Rare+), field particles, aura rings (Legendary+), and a <strong>resource deposit ring</strong> (all classes) — a thin orbital torus and clustered particles colored by mineral type.</p>
+
+    <h3>5.1 Resource Deposit Visuals</h3>
+    <p>Every star system renders a mineral deposit ring at <code>coreRadius × 1.75</code>. Opacity and particle count scale with rarity:</p>
+    <table>
+      <thead><tr><th>Resource</th><th>Color</th><th>Ring Opacity</th><th>Particles</th></tr></thead>
+      <tbody>
+        <tr><td>Stone</td><td><code>#8B7D6B</code></td><td>12%</td><td>6</td></tr>
+        <tr><td>Iron</td><td><code>#708090</code></td><td>15%</td><td>8</td></tr>
+        <tr><td>Gold</td><td><code>#FFD700</code></td><td>35%</td><td>14</td></tr>
+        <tr><td>Crystal</td><td><code>#E0FFFF</code></td><td>55%</td><td>22</td></tr>
+        <tr><td>Void Matter</td><td><code>#4B0082</code></td><td>75%</td><td>32</td></tr>
+      </tbody>
+    </table>
+
+    <h3>5.2 Standout Visuals for Rare Resources</h3>
+    <h4>Crystal (Rare — ~7.8% of blocks)</h4>
+    <p>Rotating wireframe octahedron (cyan), prismatic counter-rotating ring, 18 independently-twinkling sparkle particles.</p>
+    <h4>Void Matter (Epic — ~4.7% of blocks)</h4>
+    <p>Solid black event horizon sphere, dark purple accretion disk spinning at 0.015 rad/frame, 40-particle inward spiral arms, dark outer halo.</p>
+  </section>
+
+  <!-- UI -->
+  <section class="section" id="ui">
+    <div class="section-label">§ 6</div>
+    <h2>6. User Interface &amp; Interaction</h2>
+    <p>Controls: block height input, prev/next navigation, random warp, keyboard arrows, <kbd>R</kbd> key for random, mouse drag to orbit, scroll to zoom. URL persistence via <code>?block=</code>. Verification link to <code>ordinals.com/r/blockinfo/{height}</code>.</p>
+    <p><strong>Resource badges:</strong> Crystal and Void Matter trait cards receive animated borders, glowing badges, and CSS pulse animations so users immediately spot rare mineral deposits.</p>
+  </section>
+
+  <!-- NAMESPACE -->
+  <section class="section" id="namespace">
+    <div class="section-label">§ 7</div>
+    <h2>7. Namespace &amp; Composability</h2>
+    <ul style="list-style:none;margin:10px 0;padding:0;display:flex;flex-direction:column;gap:10px;">
+      <li style="display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:9px;">
+        <span style="font-family:'Orbitron',sans-serif;font-size:0.58rem;font-weight:700;letter-spacing:1px;color:var(--btc);min-width:52px;padding-top:1px;">Parent</span>
+        <code>&lt;height&gt;.bitcoin</code>
+      </li>
+      <li style="display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:9px;">
+        <span style="font-family:'Orbitron',sans-serif;font-size:0.58rem;font-weight:700;letter-spacing:1px;color:var(--btc);min-width:52px;padding-top:1px;">Child</span>
+        <code>&lt;label&gt;.&lt;height&gt;.bitcoin</code>
+      </li>
+    </ul>
+    <p style="margin-top:10px;color:var(--muted);font-size:0.84rem;">Follows Ordinals parent-child hierarchy.</p>
+  </section>
+
+  <!-- SECURITY -->
+  <section class="section" id="security">
+    <div class="section-label">§ 8</div>
+    <h2>8. Security &amp; Trust Model</h2>
+    <p>All generation is client-side, deterministic, and verifiable. Source: ordinals.com public endpoint. Caching prevents replay attacks. No private keys, no wallets, no backend.</p>
+  </section>
+
+  <!-- PERFORMANCE -->
+  <section class="section" id="perf">
+    <div class="section-label">§ 9</div>
+    <h2>9. Performance Characteristics</h2>
+    <table>
+      <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Initial load</td><td>~150 KB</td></tr>
+        <tr><td>Block fetch</td><td>50–200 ms</td></tr>
+        <tr><td>Scene build</td><td>&lt;100–500 ms</td></tr>
+        <tr><td>Frame rate</td><td>60 fps on integrated graphics</td></tr>
+        <tr><td>GPU memory</td><td>~30–45 MB</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- CONCLUSION -->
+  <section class="section" id="conclusion">
+    <div class="section-label">§ 10</div>
+    <h2>10. Conclusion</h2>
+    <div class="abstract-card">
+      <p>Bitcoin Universe transforms block consensus data into trustless, immutable, and procedurally generated digital universes. The deterministic protocol ensures every block height maps to exactly one star system — reproducible by anyone, owned by no one, anchored forever in the blockchain.</p>
+      <p style="margin-top:12px"><strong>Every block is a universe.</strong></p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    Document generated from protocol specification v0.3.0.<br>
+    For the live explorer, visit the <a href="index.html">Bitcoin Universe interface</a>.<br>
+    Data source: <a href="https://ordinals.com" target="_blank">ordinals.com/r/blockinfo</a> — No indexer required.
+  </footer>
+
+</main>
+</div>
+
+<script>
+// ── STARFIELD ──
+const canvas = document.getElementById('starfield');
+const ctx = canvas.getContext('2d');
+let W, H, stars = [];
+function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+function initStars(){
+  stars=[];
+  for(let i=0;i<220;i++) stars.push({
+    x:Math.random()*W, y:Math.random()*H,
+    r:Math.random()*1.2+0.2,
+    a:Math.random(),
+    speed:Math.random()*0.4+0.1,
+    twinkle:Math.random()*2+0.5
+  });
+}
+let t=0;
+function drawStars(){
+  ctx.clearRect(0,0,W,H);
+  t+=0.012;
+  stars.forEach(s=>{
+    const alpha = s.a*(0.4+0.6*Math.sin(t*s.twinkle+s.x));
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${alpha})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+window.addEventListener('resize',()=>{ resize(); initStars(); });
+resize(); initStars(); drawStars();
+
+// ── TOC ACTIVE HIGHLIGHT ──
+const tocLinks = document.querySelectorAll('.toc-link');
+const sections = document.querySelectorAll('.section');
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      tocLinks.forEach(l=>l.classList.remove('active'));
+      const link = document.querySelector(`.toc-link[href="#${e.target.id}"]`);
+      if(link) link.classList.add('active');
+    }
+  });
+},{threshold:0.25});
+sections.forEach(s=>observer.observe(s));
+</script>
+</body>
+</html>
