@@ -233,6 +233,8 @@
 
         /* ─── CONTROLS (now in header right) ─────────── */
         .controls-wrap { display: none; } /* hidden — controls moved into header */
+        .paper-link-nav { display:inline-flex; align-items:center; gap:5px; text-decoration:none; font-family:"Orbitron",sans-serif; font-size:0.62rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#0a0500; background:linear-gradient(135deg,#f7931a,#e07010); border:none; padding:10px 16px; border-radius:9px; cursor:pointer; white-space:nowrap; box-shadow:0 0 0 1px rgba(247,147,26,0.4),0 4px 20px rgba(247,147,26,0.45); transition:all 0.22s ease; flex-shrink:0; }
+        .paper-link-nav:hover { transform:translateY(-2px); box-shadow:0 0 0 1px rgba(247,147,26,0.6),0 6px 28px rgba(247,147,26,0.65); background:linear-gradient(135deg,#ffab40,#f7931a); }
         .paper-link {
             display: inline-flex; align-items: center; gap: 6px;
             font-family: 'Space Mono', monospace; font-size: 0.58rem;
@@ -385,9 +387,18 @@
             display: grid;
             grid-template-columns: 1fr var(--sidebar-w);
             gap: var(--gap);
-            align-items: start;
+            align-items: stretch;
         }
         @media(max-width:1160px) { .main-grid { grid-template-columns: 1fr; } }
+        /* sidebar panel fills full height of the grid row */
+        .main-grid > .panel {
+            display: flex;
+            flex-direction: column;
+        }
+        .main-grid > .panel .panel-body-scroll {
+            flex: 1;
+            max-height: none;
+        }
 
         /* ─── PANELS ──────────────────────────────────── */
         .panel {
@@ -1076,9 +1087,8 @@
     <header>
         <div class="header-left">
             <h1><span style="display:inline-block;width:0.55em;height:0.55em;background:var(--btc-orange);border-radius:3px;margin-right:10px;vertical-align:middle;box-shadow:0 0 12px var(--btc-glow);flex-shrink:0;"></span>Bitcoin Universe</h1>
-            <p class="subtitle">// deterministic star systems from block consensus data</p>
+            <p class="subtitle">// A universe built from Bitcoin data</p>
         </div>
-        <a href="paper.html" class="paper-link" title="Technical Whitepaper"><span class="paper-dot"></span>Paper</a>
         <div class="controls">
             <button class="nav-btn" id="prevBtn" onclick="navigateBlock(-1)" title="Previous block">&#9664; Prev</button>
             <div class="input-group">
@@ -1089,6 +1099,7 @@
             <div class="controls-divider"></div>
             <button id="exploreBtn" onclick="exploreWorld()">&#x1F52D; Scan</button>
             <button class="random-btn" id="randomBtn" onclick="exploreRandom()">&#x1F3B2; Warp</button>
+            <a href="paper.html" class="paper-link-nav" title="Technical Whitepaper" target="_blank">📄 Paper</a>
             <button class="share-btn" id="shareBtn" onclick="shareWorld()">&#x1F517; Share</button>
             <div class="controls-divider"></div>
             <div class="theme-toggle">
