@@ -1003,12 +1003,7 @@ html.theme-light pre { background: rgba(0,0,30,0.04) !important; }
     <pre><code>weather_index = parseInt(hash[2:4], 16) % 4</code></pre>
     <table>
       <thead><tr><th>Index</th><th>Weather</th></tr></thead>
-      <tbody>
-        <tr><td>0</td><td>Sunny</td></tr>
-        <tr><td>1</td><td>Rain</td></tr>
-        <tr><td>2</td><td>Storm</td></tr>
-        <tr><td>3</td><td>Snow</td></tr>
-      </tbody>
+      <tbody><tr><td>0</td><td>Sunny</td></tr><tr><td>1</td><td>Rain</td></tr><tr><td>2</td><td>Storm</td></tr><tr><td>3</td><td>Snow</td></tr></tbody>
     </table>
 
     <h3 id="civ">3.3 Civilization Density</h3>
@@ -1102,69 +1097,17 @@ stellar_class  = lookup(leading_zeros)</code></pre>
     <h3 id="trait-summary">3.9 Trait Summary</h3>
     <p>Every Bitcoin block deterministically produces the following cosmic traits. Each trait is derived from a single on-chain field, with no external input.</p>
     <table>
-      <thead>
-        <tr>
-          <th style="width:2.5rem">#</th>
-          <th>Cosmic Name</th>
-          <th>Bitcoin Field</th>
-          <th>Derivation</th>
-        </tr>
-      </thead>
+      <thead><tr><th style="width:2.5rem">#</th><th>Cosmic Name</th><th>Bitcoin Field</th><th>Derivation</th></tr></thead>
       <tbody>
-        <tr>
-          <td style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--btc);font-weight:900">1</td>
-          <td><strong>Surface Biome</strong></td>
-          <td><code>hash</code></td>
-          <td><code>parseInt(hash[18:20], 16) % 5</code></td>
-        </tr>
-        <tr>
-          <td style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--btc);font-weight:900">2</td>
-          <td><strong>Atmosphere (Weather)</strong></td>
-          <td><code>hash</code></td>
-          <td><code>parseInt(hash[2:4], 16) % 4</code></td>
-        </tr>
-        <tr>
-          <td style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--btc);font-weight:900">3</td>
-          <td><strong>Civilization Density</strong></td>
-          <td><code>transaction_count</code></td>
-          <td>Range lookup → 7 levels (Primordial → Ecumenopolis)</td>
-        </tr>
-        <tr>
-          <td style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--btc);font-weight:900">4</td>
-          <td><strong>Economic Development</strong></td>
-          <td><code>total_fee</code></td>
-          <td>Range lookup → 7 tiers (Primordial → Omega)</td>
-        </tr>
-        <tr>
-          <td style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--btc);font-weight:900">5</td>
-          <td><strong>Stellar Class</strong></td>
-          <td><code>hash</code></td>
-          <td>Count leading zeros → 7 classes (Common → Transcendent)</td>
-        </tr>
-        <tr>
-          <td style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--btc);font-weight:900">6</td>
-          <td><strong>Resource Deposit</strong></td>
-          <td><code>merkle_root</code></td>
-          <td><code>parseInt(merkle_root[0:2], 16)</code> → range lookup</td>
-        </tr>
-        <tr>
-          <td style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--btc);font-weight:900">7</td>
-          <td><strong>Historical Era</strong></td>
-          <td><code>subsidy</code></td>
-          <td>Exact value match → halving epoch</td>
-        </tr>
-        <tr>
-          <td style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--btc);font-weight:900">8</td>
-          <td><strong>Temporal Modifier</strong></td>
-          <td><code>timestamp</code></td>
-          <td>UTC hour + weekday → Midnight / Weekend / Void Midnight / Standard</td>
-        </tr>
-        <tr>
-          <td style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--btc);font-weight:900">9</td>
-          <td><strong>Special Flags</strong></td>
-          <td><code>height</code>, <code>hash</code>, <code>timestamp</code></td>
-          <td>Boolean checks → up to 14 compounding flags</td>
-        </tr>
+        <tr><td style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--btc);font-weight:900">1</td><td><strong>Surface Biome</strong></td><td><code>hash</code></td><td><code>parseInt(hash[18:20], 16) % 5</code></td></tr>
+        <tr><td style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--btc);font-weight:900">2</td><td><strong>Atmosphere (Weather)</strong></td><td><code>hash</code></td><td><code>parseInt(hash[2:4], 16) % 4</code></td></tr>
+        <tr><td style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--btc);font-weight:900">3</td><td><strong>Civilization Density</strong></td><td><code>transaction_count</code></td><td>Range lookup → 7 levels (Primordial → Ecumenopolis)</td></tr>
+        <tr><td style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--btc);font-weight:900">4</td><td><strong>Economic Development</strong></td><td><code>total_fee</code></td><td>Range lookup → 7 tiers (Primordial → Omega)</td></tr>
+        <tr><td style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--btc);font-weight:900">5</td><td><strong>Stellar Class</strong></td><td><code>hash</code></td><td>Count leading zeros → 7 classes (Common → Transcendent)</td></tr>
+        <tr><td style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--btc);font-weight:900">6</td><td><strong>Resource Deposit</strong></td><td><code>merkle_root</code></td><td><code>parseInt(merkle_root[0:2], 16)</code> → range lookup</td></tr>
+        <tr><td style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--btc);font-weight:900">7</td><td><strong>Historical Era</strong></td><td><code>subsidy</code></td><td>Exact value match → halving epoch</td></tr>
+        <tr><td style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--btc);font-weight:900">8</td><td><strong>Temporal Modifier</strong></td><td><code>timestamp</code></td><td>UTC hour + weekday → Midnight / Weekend / Void Midnight / Standard</td></tr>
+        <tr><td style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--btc);font-weight:900">9</td><td><strong>Special Flags</strong></td><td><code>height</code>, <code>hash</code>, <code>timestamp</code></td><td>Boolean checks → up to 14 compounding flags</td></tr>
       </tbody>
     </table>
   </section>
@@ -1242,7 +1185,7 @@ stellar_class  = lookup(leading_zeros)</code></pre>
         <tr><td>🌙 Void Midnight</td><td><code>hour ∈ {0,1,23}</code></td><td>~12.5%</td><td>Near UTC midnight</td></tr>
         <tr><td>✨ Cosmic Signature</td><td><code>hash</code> contains <code>21e8</code></td><td>~0.05%</td><td>Sacred pattern</td></tr>
         <tr><td>🔁 Cosmic Echo</td><td><code>hash</code> has 4+ repeated hex chars</td><td>~18%</td><td>Resonance anomaly</td></tr>
-        <tr><td>🪞 Symmetric Nebula</td><td>Full block height palindrome ≥3 digits</td><td>Variable</td><td>Structural symmetry</td></tr>
+        <tr><td>🪞 Symmetric Nebula</td><td>Full block height palindrome (≥3 digits)</td><td>Variable</td><td>Structural symmetry</td></tr>
         <tr><td>🔢 Prime Alignment</td><td><code>isPrime(height)</code></td><td>~13%</td><td>Mathematical rarity</td></tr>
         <tr><td>📐 Harmonic Sequence</td><td><code>isFibonacci(height)</code></td><td>Rare</td><td>Golden ratio alignment</td></tr>
         <tr><td>🔥 Primordial Age</td><td><code>height &lt; 1000</code></td><td>0.1%</td><td>First 1,000 blocks</td></tr>
@@ -1295,7 +1238,7 @@ stellar_class  = lookup(leading_zeros)</code></pre>
     <ul style="list-style:none;margin:10px 0;padding:0;display:flex;flex-direction:column;gap:10px;">
       <li style="display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:9px;">
         <span style="font-family:'Orbitron',sans-serif;font-size:0.58rem;font-weight:700;letter-spacing:1px;color:var(--btc);min-width:52px;padding-top:1px;">Parent</span>
-        <div><code>&lt;height&gt;.bitcoin</code> <span style="font-size:0.78rem;color:var(--muted);margin-left:8px;">— the world's deed; first confirmed inscription wins permanently</span></div>
+        <div><code>&lt;height&gt;.bitcoin</code> <span style="font-size:0.78rem;color:var(--muted);margin-left:8px;">— the world's deed; first confirmed inscription wins permanently.<br><strong>Rule:</strong> The block height must exist at inscription time (≤ current block height). Pre‑inscribing future blocks is not permitted – the namespace is only valid for already‑mined blocks.</span></div>
       </li>
       <li style="display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:9px;">
         <span style="font-family:'Orbitron',sans-serif;font-size:0.58rem;font-weight:700;letter-spacing:1px;color:var(--btc);min-width:52px;padding-top:1px;">Child 1</span>
@@ -1356,7 +1299,7 @@ stellar_class  = lookup(leading_zeros)</code></pre>
       <ol style="padding-left:20px;line-height:2.4;font-size:0.88rem">
         <li><strong>Explore &amp; Verify</strong> — Confirm the block's traits in the explorer: stellar class, flags, biome, resource</li>
         <li><strong>Capture</strong> — Export a clean 1200×1200 PNG via the Export button (no UI chrome)</li>
-        <li><strong>Inscribe the parent namespace</strong> — Inscribe <code>&lt;height&gt;.bitcoin</code>. This is the <strong>deed to the world</strong>. First confirmed inscription wins, permanently, as determined by Bitcoin consensus</li>
+        <li><strong>Inscribe the parent namespace</strong> — Inscribe <code>&lt;height&gt;.bitcoin</code>. This is the <strong>deed to the world</strong>. First confirmed inscription wins, permanently, as determined by Bitcoin consensus.<br><strong>Block existence check:</strong> The numeric part of the namespace must be ≤ the block height in which the inscription is confirmed. Future blocks cannot be claimed. This follows the same convention as Bitmap.</li>
         <li><strong>Inscribe the image as a child</strong> — Inscribe the PNG as a child of <code>&lt;height&gt;.bitcoin</code>. The image is now cryptographically linked to the ownership claim on-chain — it lives <em>under</em> the deed, provably and permanently</li>
         <li><strong>Inscribe the metadata as a sibling child</strong> — Inscribe a JSON file as a second child of <code>&lt;height&gt;.bitcoin</code>. This is the protocol envelope that lets indexers and marketplaces discover and verify the artifact without trusting any server:
           <pre style="margin:12px 0 4px;padding:14px 18px;background:rgba(0,0,0,0.55);border:1px solid rgba(0,229,255,0.15);border-radius:8px;font-family:'Space Mono',monospace;font-size:0.7rem;line-height:1.9;color:#00e5ff;overflow-x:auto;">{
@@ -1380,23 +1323,18 @@ stellar_class  = lookup(leading_zeros)</code></pre>
 
     <table style="width:100%;border-collapse:collapse;margin:16px 0">
       <thead>
-        <tr>
-          <th style="text-align:left;padding:10px 14px;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--btc-amber);border-bottom:1px solid rgba(247,147,26,0.3)">Asset</th>
+        <tr><th style="text-align:left;padding:10px 14px;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--btc-amber);border-bottom:1px solid rgba(247,147,26,0.3)">Asset</th>
           <th style="text-align:left;padding:10px 14px;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--btc-amber);border-bottom:1px solid rgba(247,147,26,0.3)">What It Represents</th>
           <th style="text-align:left;padding:10px 14px;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--btc-amber);border-bottom:1px solid rgba(247,147,26,0.3)">If Sold/Transferred</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td style="padding:12px 14px;border-bottom:1px solid var(--border);font-size:0.85rem"><strong>Parent</strong><br><code style="font-size:0.72rem">840000.bitcoin</code></td>
+        <tr><td style="padding:12px 14px;border-bottom:1px solid var(--border);font-size:0.85rem"><strong>Parent</strong><br><code style="font-size:0.72rem">840000.bitcoin</code></td>
           <td style="padding:12px 14px;border-bottom:1px solid var(--border);font-size:0.85rem">The world's deed and namespace root. The most authoritative asset — holds the block's identity and the right to issue further children</td>
-          <td style="padding:12px 14px;border-bottom:1px solid var(--border);font-size:0.85rem">Buyer inherits the world's identity and namespace authority. Seller relinquishes all claims</td>
-        </tr>
-        <tr>
-          <td style="padding:12px 14px;font-size:0.85rem"><strong>Child</strong><br><code style="font-size:0.72rem">image.png ↳ 840000.bitcoin</code></td>
+          <td style="padding:12px 14px;border-bottom:1px solid var(--border);font-size:0.85rem">Buyer inherits the world's identity and namespace authority. Seller relinquishes all claims</td></tr>
+        <tr><td style="padding:12px 14px;font-size:0.85rem"><strong>Child</strong><br><code style="font-size:0.72rem">image.png ↳ 840000.bitcoin</code></td>
           <td style="padding:12px 14px;font-size:0.85rem">The visual artifact — the canonical render of the world, provably linked to its parent namespace</td>
-          <td style="padding:12px 14px;font-size:0.85rem">Buyer holds the canonical image artifact. Parent namespace remains with original owner unless separately transferred</td>
-        </tr>
+          <td style="padding:12px 14px;font-size:0.85rem">Buyer holds the canonical image artifact. Parent namespace remains with original owner unless separately transferred</td></tr>
       </tbody>
     </table>
 
@@ -1405,8 +1343,7 @@ stellar_class  = lookup(leading_zeros)</code></pre>
     <h3 id="artifact-conv">11.3 Convention</h3>
     <table style="width:100%;border-collapse:collapse;margin:16px 0">
       <thead>
-        <tr>
-          <th style="text-align:left;padding:10px 14px;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--btc-amber);border-bottom:1px solid rgba(247,147,26,0.3)">Convention</th>
+        <tr><th style="text-align:left;padding:10px 14px;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--btc-amber);border-bottom:1px solid rgba(247,147,26,0.3)">Convention</th>
           <th style="text-align:left;padding:10px 14px;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--btc-amber);border-bottom:1px solid rgba(247,147,26,0.3)">Recommendation</th>
         </tr>
       </thead>
@@ -1417,6 +1354,7 @@ stellar_class  = lookup(leading_zeros)</code></pre>
         <tr><td style="padding:10px 14px;border-bottom:1px solid var(--border);font-size:0.85rem"><strong>Required JSON fields</strong></td><td style="padding:10px 14px;border-bottom:1px solid var(--border);font-size:0.85rem"><code>"p": "bitcoinuniverse"</code>, <code>"op": "artifact"</code>, <code>"block"</code>, <code>"hash"</code>, <code>"type": "image"</code></td></tr>
         <tr><td style="padding:10px 14px;border-bottom:1px solid var(--border);font-size:0.85rem"><strong>Optional JSON fields</strong></td><td style="padding:10px 14px;border-bottom:1px solid var(--border);font-size:0.85rem"><code>"traits": { ... }</code> — recommended; anchors visual properties for marketplaces and verifiers</td></tr>
         <tr><td style="padding:10px 14px;border-bottom:1px solid var(--border);font-size:0.85rem"><strong>Priority rule</strong></td><td style="padding:10px 14px;border-bottom:1px solid var(--border);font-size:0.85rem">First confirmed namespace inscription wins — enforced by Bitcoin consensus</td></tr>
+        <tr><td style="padding:10px 14px;border-bottom:1px solid var(--border);font-size:0.85rem"><strong>Block existence</strong></td><td style="padding:10px 14px;border-bottom:1px solid var(--border);font-size:0.85rem">The numeric part of the namespace must be ≤ the block height in which the inscription is confirmed. Future blocks cannot be claimed.</td></tr>
         <tr><td style="padding:10px 14px;font-size:0.85rem"><strong>No platform</strong></td><td style="padding:10px 14px;font-size:0.85rem">Any standard Ordinals tool: <code>ord</code> CLI, OrdinalsBot, Gamma.io</td></tr>
       </tbody>
     </table>
