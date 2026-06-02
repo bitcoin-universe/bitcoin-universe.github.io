@@ -682,7 +682,7 @@ html.theme-light code{background:rgba(0,0,0,0.06);color:#1a6fa0;border-color:rgb
             <li>🌙 <strong>Void Midnight</strong> — Near UTC midnight (~12.5%)</li>
             <li>✨ <strong>Cosmic Signature</strong> — Hash contains <code>21e8</code> (~0.05%)</li>
             <li>🔁 <strong>Cosmic Echo</strong> — Hash has 4+ repeated hex chars (~18%)</li>
-            <li>🪞 <strong>Symmetric Nebula</strong> — Full block height is a palindrome ≥3 digits</li>
+            <li>🪞 <strong>Symmetric Nebula</strong> — Full block height is a palindrome (≥3 digits)</li>
             <li>🔢 <strong>Prime Alignment</strong> — Block height is prime (~13%)</li>
             <li>📐 <strong>Harmonic Sequence</strong> — Block height is a Fibonacci number</li>
             <li>🔥 <strong>Primordial Age</strong> — Block height below 1,000 (0.1%)</li>
@@ -807,6 +807,11 @@ html.theme-light code{background:rgba(0,0,0,0.06);color:#1a6fa0;border-color:rgb
         <div class="faq-answer-inner">
           <p>Each Bitcoin block corresponds to a parent namespace: <code>&lt;height&gt;.bitcoin</code>. For example, block 840000 maps to <code>840000.bitcoin</code>. Child inscriptions can be nested under it following the Ordinals parent-child hierarchy.</p>
           <p>The namespace inscription <strong>is the ownership claim</strong> — it is the on-chain proof that you have staked this block's identity. Without it, you have no binding connection to the world. Viewing and exploring requires no inscription, but <strong>owning a world requires holding its namespace.</strong></p>
+          <p><strong>Block existence rule:</strong> A namespace like <code>1500000.bitcoin</code> cannot be inscribed until block 1,500,000 has actually been mined. The numeric part must be ≤ the current Bitcoin block height at the time of inscription. This follows the same convention used by Bitmap and is enforced by indexers – it prevents claiming future blocks that don't yet carry on‑chain entropy.</p>
+          <div class="callout callout-note" style="margin-top:16px;">
+            <div class="callout-title">📦 Namespace validity</div>
+            <p>Indexers and marketplaces that support the <code>.bitcoin</code> namespace will only recognise inscriptions where the block height already exists on the Bitcoin blockchain. If you inscribe a future block height, it will be ignored – and you will waste the inscription fee.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -845,7 +850,7 @@ html.theme-light code{background:rgba(0,0,0,0.06);color:#1a6fa0;border-color:rgb
           <ol style="padding-left:20px;margin:10px 0">
             <li style="margin-bottom:10px"><strong>Explore &amp; Verify</strong> — Navigate to your block height and confirm its traits: stellar class, special flags, biome, resource</li>
             <li style="margin-bottom:10px"><strong>Capture</strong> — Use the Export button for a clean 1200×1200 PNG with no UI chrome</li>
-            <li style="margin-bottom:10px"><strong>Inscribe the parent namespace</strong> — Inscribe <code>&lt;height&gt;.bitcoin</code> (e.g. <code>840000.bitcoin</code>). <strong>This is the deed to your world.</strong> First confirmed inscription wins, permanently</li>
+            <li style="margin-bottom:10px"><strong>Inscribe the parent namespace</strong> — Inscribe <code>&lt;height&gt;.bitcoin</code> (e.g. <code>840000.bitcoin</code>). <strong>This is the deed to your world.</strong> First confirmed inscription wins, permanently.<br><strong>Block existence check:</strong> The numeric part of the namespace must be ≤ the block height in which the inscription is confirmed. Future blocks cannot be claimed — follow the Bitmap convention.</li>
             <li style="margin-bottom:10px"><strong>Inscribe the image as a child</strong> — Inscribe the PNG as a child inscription of <code>840000.bitcoin</code>. The image is now cryptographically linked to the namespace — it lives <em>under</em> your ownership claim on-chain</li>
             <li style="margin-bottom:0"><strong>Inscribe the metadata as a sibling child</strong> — Inscribe a JSON file as a second child of <code>840000.bitcoin</code> alongside the image. This is the protocol signal that lets indexers and marketplaces identify your artifact without trusting any server</li>
           </ol>
@@ -922,6 +927,7 @@ html.theme-light code{background:rgba(0,0,0,0.06);color:#1a6fa0;border-color:rgb
           <ul>
             <li><strong>Format</strong>: PNG, 1200×1200 px minimum, square, no UI chrome</li>
             <li><strong>Parent</strong>: must be inscribed as a child of <code>&lt;height&gt;.bitcoin</code></li>
+            <li><strong>Block existence check</strong> – The <code>&lt;height&gt;</code> in the parent namespace must already be part of the Bitcoin blockchain. Pre‑inscribing future blocks is not allowed.</li>
             <li><strong>Metadata (recommended)</strong>: attach a sibling JSON child inscription — a self-describing protocol envelope that lets indexers and marketplaces identify and verify the artifact without trusting any platform:
               <pre style="margin:10px 0 4px;padding:12px 16px;background:rgba(0,0,0,0.5);border:1px solid rgba(0,229,255,0.15);border-radius:8px;font-family:'Space Mono',monospace;font-size:0.68rem;line-height:1.9;color:var(--cyan);overflow-x:auto;">{
   "p": "bitcoinuniverse",
